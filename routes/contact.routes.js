@@ -1,10 +1,16 @@
-const contactController = require('../controllers/contact.controller')
+const ContactController = require('../controllers/contact.controller')
 
 module.exports =[
     {
         method: 'GET',
         path: '/contacts',
-        handler: contactController.list
+        handler: ContactController.list
+    },
+
+    {
+        method: 'POST',
+        path: '/contacts',
+        handler: ContactController.create
     }
 ]
 
