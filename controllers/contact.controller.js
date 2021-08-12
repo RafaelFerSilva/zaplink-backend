@@ -1,3 +1,4 @@
+const { remove } = require("../models/contact.model");
 const ContactModel = require("../models/contact.model");
 
 module.exports = {
@@ -20,9 +21,24 @@ module.exports = {
     if (!contact.description)
       return h.response({ message: "Description Is required." }).code(409);
 
+    const dup = await ContactModel.findOne({ number: contact.number }).exec();
+
+    if (dup) {
+      return h.response({ error: 'Duplicated Number' }).code(409)
+    }
+
     try {
       let result = await contact.save();
       return h.response(result).code(200);
+    } catch (error) {
+      return h.response(error).code(500)
+    }
+  },
+
+  async remove(request, h) {
+    try {
+      await ContactModel.deleteOne({ _id: request.params.contactid})
+      return h.response({}).code(204)
     } catch (error) {
       return h.response(error).code(500)
     }
